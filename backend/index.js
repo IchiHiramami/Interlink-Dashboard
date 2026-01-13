@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/auth')
 
 const app = express();
 
@@ -13,9 +14,10 @@ app.use(express.urlencoded({extended : true}));
 app.use(cors());
 
 app.use('/user', userRoutes);
+app.use('/auth', authRoutes)
 
 // Test if the server is running
-app.get('/', async (req,res) => {
+app.get('/' ,async (req,res) => {
     res.send('Dashboard API is running');
 });
 
