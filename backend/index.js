@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(cors());
 
-app.use('/user', userRoutes);
-app.use('/auth', authRoutes)
+app.use('/users', userRoutes);
+app.use('/users', authRoutes)
 
 // Test if the server is running
 app.get('/' ,async (req,res) => {
@@ -26,7 +26,7 @@ const start = async () => {
         await mongoose.connect(process.env.MONGODB_URI);
         const port = process.env.port || 8080;
         app.listen(port, () => {
-            console.log('App is listening at port ${port}');
+            console.log(`App is listening at port ${port}`);
         }); 
     } catch (error) {
         console.error('Database connection error:', error)
