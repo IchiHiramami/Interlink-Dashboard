@@ -24,6 +24,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+// return user-info on /dashboard
+router.get('/dashboard', auth, async (req, res) => {
+  try {
+    console.log('get dashboard pinged')
+    const user = await User.findById(req.user.id || req.user.email);
+    res.json({
+      email : user.email,
+      role: user.role,
+      groupName: user.groupName,
+      groupProgress: user.groupProgress
+    })
+  } catch (err) {
+    return res.status(500).json({ error: err.message })
+  }
+})
+
 // user role can update name and idNumber here (for very specific instances only)
 router.put('/email/:email', auth , async (req, res) => {
   try {

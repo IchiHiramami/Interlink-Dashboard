@@ -43,14 +43,14 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ error: `${user} does not exist`});
+        if (!user) return res.status(401).json({ error: `${email} does not exist`});
 
         const match = await bcrypt.compare(password, user.password);
         if (!match) return res.status(401).json({ error: 'Invalid Credentials'});
 
         const token = jwt.sign({ id: user._id, email: user.email, role: user.role}, JWT_SECRET, { expiresIn: '1h'});
         console.log("Successful Login")
-        res.json({ token });
+        res.json({ token, user });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
