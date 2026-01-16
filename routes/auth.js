@@ -12,9 +12,10 @@ router.post('/register', async (req, res) => {
     const {email, firstName, lastName, idNumber, password} = req.body;
 
     const requiredFields = { email, firstName, lastName, idNumber, password }; 
+    
     for (const [field, value] of Object.entries(requiredFields)) { 
-        if (!value || value.trim() === '') 
-                { return res.status(400).json({ error: `${field} is required` }); 
+        if (!value || value.trim() === '') {
+            return res.status(400).json({ error: `${field} is required` }); 
         } 
     }
 
@@ -31,10 +32,19 @@ router.post('/register', async (req, res) => {
             groupProgress : 0
         }
     )
-        console.log('Successful registration')
-        return res.status(201).json({ message: `Successfully created ${user}`})
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
+    console.log('Successful registration')
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn : '1h'
+    });
+    
+    console.log('token sent back')
+
+    const newUser = user.toObject();
+    delete newUser.password
+    res.json({ token, newUser});    
+} catch (err) {
+        return res.status(500).json({ error: "User Registration Failed" });
     }
 });
 
@@ -50,7 +60,10 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, email: user.email, role: user.role}, JWT_SECRET, { expiresIn: '1h'});
         console.log("Successful Login")
-        res.json({ token, user });
+        
+        const newUser = user.toObject();
+        delete newUser.password
+        res.json({ token, newUser});  
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

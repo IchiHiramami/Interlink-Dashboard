@@ -40,6 +40,18 @@ router.get('/dashboard', auth, async (req, res) => {
   }
 })
 
+router.get('/users/stats', auth, async (req, res) => {
+  try {
+    console.log('stats retrieved');
+    const user = await User.findById(req.user.id);
+    res.json({
+      groupProgress: user.groupProgress
+    })
+  } catch (err) {
+    return res.status(500).json({ error: err.message })
+  }
+})
+
 // user role can update name and idNumber here (for very specific instances only)
 router.put('/email/:email', auth , async (req, res) => {
   try {
