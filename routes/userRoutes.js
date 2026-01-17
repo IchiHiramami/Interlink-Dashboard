@@ -31,6 +31,8 @@ router.get('/dashboard', auth, async (req, res) => {
     const user = await User.findById(req.user.id || req.user.email);
     res.json({
       email : user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       role: user.role,
       groupName: user.groupName,
       groupProgress: user.groupProgress
@@ -45,6 +47,7 @@ router.get('/users/stats', auth, async (req, res) => {
     console.log('stats retrieved');
     const user = await User.findById(req.user.id);
     res.json({
+      groupName: user.groupName,
       groupProgress: user.groupProgress
     })
   } catch (err) {
