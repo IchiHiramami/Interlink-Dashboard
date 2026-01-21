@@ -1,8 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-
+const User = require('../models/User').User;
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -11,6 +10,7 @@ router.post('/register', async (req, res) => {
     try {
     const {email, firstName, lastName, idNumber, password} = req.body;
 
+    // POSTMAN test
     const requiredFields = { email, firstName, lastName, idNumber, password }; 
     
     for (const [field, value] of Object.entries(requiredFields)) { 
@@ -20,7 +20,7 @@ router.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
     const user = await User.create({
             email,
             firstName,

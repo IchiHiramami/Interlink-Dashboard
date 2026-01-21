@@ -1,28 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('../models/User').User;
 const auth = require('../middleware/auth')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-
-// find a user using email as query parameter
-router.get('/', async (req, res) => {
-  try {
-    const {email} = req.query;
-    if (!email) {
-      const users = await User.find();
-      return res.json(users);
-    }
-    const user = await User.findOne({ email: email.trim()});
-    if (!user) return res.status(404).json({error: 'User not found'});
-
-    return res.json(user);
-
-  } catch (err) {
-    res.status(500).json({ error: err.message});
-  }
-});
 
 // return user-info on /dashboard
 router.get('/dashboard', auth, async (req, res) => {
@@ -48,7 +29,8 @@ router.get('/users/stats', auth, async (req, res) => {
     const user = await User.findById(req.user.id);
     res.json({
       groupName: user.groupName,
-      groupProgress: user.groupProgress
+      groupProgress: user.groupProgress,
+      role : user.role
     })
   } catch (err) {
     return res.status(500).json({ error: err.message })

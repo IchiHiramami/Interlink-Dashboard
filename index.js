@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
-const authRoutes = require('./routes/auth')
+const authRoutes = require('./routes/auth');
+const postRoutes = require('./routes/posts');
 
 const app = express();
 
@@ -14,7 +15,8 @@ app.use(express.urlencoded({extended : true}));
 app.use(cors());
 
 app.use('/', userRoutes);
-app.use('/', authRoutes)
+app.use('/', authRoutes);
+app.use('/', postRoutes);
 
 // Test if the server is running
 app.get('/' ,async (req,res) => {
@@ -25,7 +27,7 @@ const start = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
         const port = process.env.port || 8080;
-        app.listen(port, () => {
+        app.listen(port, '0.0.0.0', () => {
             console.log(`App is listening at port ${port}`);
         }); 
     } catch (error) {

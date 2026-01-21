@@ -12,8 +12,17 @@ const userSchema = new mongoose.Schema({
     //Admin controlled details
     groupName: {type: String, default: '', trim: true},
     groupProgress: {type: Number, default: 0, min: 0}
-}, {timestamps: true});
+}, {timestamps: true}, { collection : 'information'});
 
 userSchema.index({idNumber: 1});
 
-module.exports = mongoose.model('User', userSchema)
+const postSchema = new mongoose.Schema({
+    title : {type: String, required : true, trim: true},
+    content : {type: String, required : true},
+    createdAt : {type : Date, default : Date.now}
+}, { collection : 'posts'});
+
+const User = mongoose.model('User', userSchema)
+const Task = mongoose.model('Task', postSchema)
+
+module.exports = {User, Task};
